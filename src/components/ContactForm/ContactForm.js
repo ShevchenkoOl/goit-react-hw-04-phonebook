@@ -1,38 +1,49 @@
-import { Component } from 'react';
+import {  useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form, Input, Label } from './ContactForm.style';
 
-class ContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
+function ContactForm({ onSubmit }) {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+
+  const handleChange = e => {
+    const { name, value } = e.target;
+
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+
+      case 'number':
+        setNumber(value);
+        break;
+
+      default:
+        return;
+    }
   };
 
-  handleChange = e => {
-    const { name, value } = e.currentTarget;
-
-    this.setState({ [name]: value });
-  };
-
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-
-    this.props.onSubmit(this.state);
-
-    this.setState({ name: '', number: '' });
+    onSubmit(name, number);
+    resetInput();
   };
 
-  render() {
-    const { name, number } = this.state;
+  const resetInput = () => {
+    setName('');
+    setNumber('');
+  };
+
+  
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <Label>
           Name
           <Input
             type="text"
             name="name"
             value={name}
-            onChange={this.handleChange}
+            onChange={handleChange}
             placeholder="Ivan Ivanov"
           />
         </Label>
@@ -42,7 +53,7 @@ class ContactForm extends Component {
             type="text"
             name="number"
             value={number}
-            onChange={this.handleChange}
+            onChange={handleChange}
             placeholder="111-11-11"
           />
         </Label>
@@ -52,7 +63,7 @@ class ContactForm extends Component {
       </Form>
     );
   }
-}
+
 
 ContactForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
