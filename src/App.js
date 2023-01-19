@@ -5,6 +5,7 @@ import Container from './components/Container/Container';
 import ContactForm from './components/ContactForm/ContactForm';
 import Filter from './components/Filter/Filter';
 import ContactList from './components/ContactLis/ContactList';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [contacts, setContacts] = useState(() => {
@@ -23,7 +24,7 @@ function App() {
       name,
       number,
     };
-
+    
     if (
       contacts.find(
         contact => contact.name.toLowerCase() === name.toLowerCase(),
