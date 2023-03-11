@@ -1,72 +1,62 @@
-import {  useState } from 'react';
-import PropTypes from 'prop-types';
-import { Button, Form, Input, Label } from './ContactForm.style';
+import { Component } from 'react';
+import shortid from 'shortid';
+import { Button, Input, Label, Sector, Title } from './ContactForm.styled';
 
-function ContactForm({ onSubmit }) {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
-
-  const handleChange = e => {
-    const { name, value } = e.target;
-
-    switch (name) {
-      case 'name':
-        setName(value);
-        break;
-
-      case 'number':
-        setNumber(value);
-        break;
-
-      default:
-        return;
-    }
-  };
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    onSubmit(name, number);
-    resetInput();
-  };
-
-  const resetInput = () => {
-    setName('');
-    setNumber('');
-  };
-
-  
-    return (
-      <Form onSubmit={handleSubmit}>
-        <Label>
-          Name
-          <Input
-            type="text"
-            name="name"
-            value={name}
-            onChange={handleChange}
-            placeholder="Ivan Ivanov"
-          />
-        </Label>
-        <Label>
-          Number
-          <Input
-            type="text"
-            name="number"
-            value={number}
-            onChange={handleChange}
-            placeholder="111-11-11"
-          />
-        </Label>
-        <Button type="submit">
-          Add contact
-        </Button>
-      </Form>
-    );
+export class ContactForm extends Component {
+  state = {
+    id: 0,
+    name: '',
+    number:''
   }
 
 
-ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};
+  handleChange = (event) => {
+    const { name, value } = event.target
+  
+    this.setState({
+      [name]: value,
+    })
+    
+  }
+  
+  submitForm = (e) => {
+    e.preventDefault()
+    this.props.handleSubmit(this.state)
+    this.setState({id: shortid.generate(),name:'', number:''})
+  }
 
-export default ContactForm;
+  render() {
+    const { name, number } = this.state;
+  
+    return (
+      <Title>
+             Phonebook
+             <Sector>
+                   <form>
+                        <Label>Name
+                            <Input
+                            type="text"
+                            name="name"
+                            id="name"
+                            value={name}
+                            onChange={this.handleChange}
+                            placeholder="Ivan Ivanov"
+                            />
+                       </Label>
+                       <Label>Number
+                            <Input
+                            type="tel"
+                            name="number"
+                            id="number"
+                            value={number}
+                            onChange={this.handleChange}
+                            placeholder="123-45-67"
+                            />
+                       </Label>
+                       <Button value="Submit" onClick={this.submitForm}>Add contact</Button>
+                    </form>
+                </Sector>
+      </Title>
+    );
+  }
+}
