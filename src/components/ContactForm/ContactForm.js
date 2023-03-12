@@ -1,33 +1,38 @@
-import { Component } from 'react';
-import shortid from 'shortid';
+import { useState } from 'react';
+//import shortid from 'shortid';
 import { Button, Input, Label, Sector, Title } from './ContactForm.styled';
 
-export class ContactForm extends Component {
-  state = {
-    id: 0,
-    name: '',
-    number:''
-  }
+export const ContactForm = ({handleSubmit}) => {
+  //const [id, setId] = useState(0);
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
+  const handleChange = event => {
+    const { name, value } = event.target;
 
-  handleChange = (event) => {
-    const { name, value } = event.target
-  
-    this.setState({
-      [name]: value,
-    })
-    
+    switch (name) {
+      case 'name': setName(value);
+      break;
+
+      case 'number': setNumber(value);
+      break;
+
+      default: return;
+    }
+      
   }
   
-  submitForm = (e) => {
+  const submitForm = e => {
     e.preventDefault()
-    this.props.handleSubmit(this.state)
-    this.setState({id: shortid.generate(),name:'', number:''})
+    handleSubmit(name, number);
+    resetInput();
   }
 
-  render() {
-    const { name, number } = this.state;
-  
+  const resetInput = () =>{
+    setName('');
+    setNumber('');
+  }
+
     return (
       <Title>
              Phonebook
@@ -39,7 +44,7 @@ export class ContactForm extends Component {
                             name="name"
                             id="name"
                             value={name}
-                            onChange={this.handleChange}
+                            onChange={handleChange}
                             placeholder="Ivan Ivanov"
                             />
                        </Label>
@@ -49,14 +54,13 @@ export class ContactForm extends Component {
                             name="number"
                             id="number"
                             value={number}
-                            onChange={this.handleChange}
+                            onChange={handleChange}
                             placeholder="123-45-67"
                             />
                        </Label>
-                       <Button value="Submit" onClick={this.submitForm}>Add contact</Button>
+                       <Button value="Submit" onClick={submitForm}>Add contact</Button>
                     </form>
                 </Sector>
       </Title>
     );
   }
-}
